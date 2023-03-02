@@ -1,4 +1,4 @@
-# ecampmany/geographic
+# geographic
 
 Simple geographical tools written in bash:
 

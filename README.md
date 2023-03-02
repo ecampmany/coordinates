@@ -1,6 +1,6 @@
 # geographic
 
-Simple geographical tools written in bash:
+Set of very simple geographical tools written in bash:
 
 * Transform geographical coordinates from UTM to Latitude/Longitude and viceversa
 (Dependencies: GDAL libraries required)

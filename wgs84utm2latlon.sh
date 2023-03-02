@@ -1,3 +1,5 @@
+#!/bin/bash
+
 if [ $# -lt 3 ]; then
 echo "Usage: wgs84utm2latlon utmx utmy zone (epsg)
 $epsg retrieved from spatialreference.org or user-defined">&2
@@ -11,7 +13,7 @@ zone=$3
 if [ $# -eq 3 ]; then
 
 utm_zone=$zone
-epsg=`cat /Users/elies/Vortex/bin/epsg_utm_84.txt | awk '/[^0-9]'$utm_zone'/ { print substr($1,1,length($1)-1) }'`
+epsg=`cat epsg_utm_84.txt | awk '/[^0-9]'$utm_zone'/ { print substr($1,1,length($1)-1) }'`
 fi
 
 if [ $# -eq 4 ]; then

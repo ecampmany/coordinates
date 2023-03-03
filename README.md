@@ -1,4 +1,4 @@
-# geographic
+# coordinates
 
 Set of very simple geographical tools written in bash:
 

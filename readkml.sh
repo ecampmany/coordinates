@@ -15,7 +15,6 @@ fileg=`echo $filestring | sed "s/ /_/g"`
 
 filename=`echo $fileg | awk '{print substr($1,1,length($1)-4)}'`
 fileext=`echo $fileg | awk '{print substr($1,length($1)-2,3)}'`
-echo $fileg
 
 # In case of kmz, unzip it
 
@@ -36,12 +35,14 @@ latitudes=`awk '/<LinearRing>/{flag=1;next}/<\/LinearRing>/{flag=0}flag' $filena
 longitudes=`awk '/<LinearRing>/{flag=1;next}/<\/LinearRing>/{flag=0}flag' $filename.kml | awk '/<coordinates>/{flag=1;next}/<\/coordinates>/{flag=0}flag' | awk '{for (i=1; i<=NF; i++) {split($i,a,",") ; print a[1]}}' | sort | awk 'NR == 1 { print }END{ print }'`
 
 
-# Calculate geodesic distance between latitudes and longitudes
+# Add a buffer of 100m (0.001) for each side, manage negative values
 
-latmin=`echo $latitudes | awk '{print $1}'`
-latmax=`echo $latitudes | awk '{print $2}'`
-lonmin=`echo $longitudes | awk '{print $1}'`
-lonmax=`echo $longitudes | awk '{print $2}'`
+latmin=`echo $latitudes | awk '{if ($1 < 0) print $1+0.001; else print $1-0.001}'`
+latmax=`echo $latitudes | awk '{if ($2 < 0) print $2-0.001; else print $2+0.001}'`
+lonmin=`echo $longitudes | awk '{if ($1 < 0) print $1+0.001; else print $1-0.001}'`
+lonmax=`echo $longitudes | awk '{if ($2 < 0) print $2-0.001; else print $2+0.001}'`
+
+# Calculate geodesic distance between latitudes and longitudes
 
 PI=3.141592653589793
 

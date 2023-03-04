@@ -3,3 +3,7 @@
 ############
 *.kml
 *.kmz
+
+# macOS system
+##############
+.DS_Store

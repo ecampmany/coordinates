@@ -91,4 +91,3 @@ echo "<?xml version=\"1.0\" encoding=\"UTF-8\"?>
         </Placemark>
 </kml>"  > $filename.box.kml
 
-	echo "UPDATE mshop_runs SET run_p1lat = $latmax,run_p1lng= $lonmin,run_p2lat = $latmax,run_p2lng = $lonmax,run_p3lat= $latmin,run_p3lng=$lonmax,run_p4lat=$latmin,run_p4lng=$lonmin where run_id =  ";

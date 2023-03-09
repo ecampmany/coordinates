@@ -8,11 +8,17 @@ fi
 
 filestring=$1
 
-# Remove blank spaces in name. Split the filename and extension. 
+# In case of blank spaces in name, remove them 
 
-cp "$filestring" "${filestring// /_}"
+case "$filestring" in  
+     *\ * )
+           echo "Removing blank space in filename"
+	   cp "$filestring" "${filestring// /_}"
+esac
+
+# Split the filename and extension
+
 fileg=`echo $filestring | sed "s/ /_/g"`
-
 filename=`echo $fileg | awk '{print substr($1,1,length($1)-4)}'`
 fileext=`echo $fileg | awk '{print substr($1,length($1)-2,3)}'`
 
@@ -25,14 +31,18 @@ mv doc.kml $filename.kml
 fi
 
 # Read all the coordinates between <coordinates> and </coordinates> inside
-# <LinearRing> (could be also inside <Polygon>
+# <LinearRing> (could be also inside <Polygon>)
+# 
+
 # Multiple strings with longitude,latitude,(altitude) space separated 
 # Print all the latitudes/longitudes printing all the seconds/firsts 
 # Sort the values and store the min and max value, first and last.
 
-latitudes=`awk '/<LinearRing>/{flag=1;next}/<\/LinearRing>/{flag=0}flag' $filename.kml | awk '/<coordinates>/{flag=1;next}/<\/coordinates>/{flag=0}flag {print $0}' | awk '{for (i=1; i<=NF; i++) {split($i,a,",") ; print a[2]}}' | sort | awk 'NR == 1 { print }END{ print }'` 
+latitudes=`awk '/<LinearRing>/{flag=1;next}/<\/LinearRing>/{flag=0}flag' $filename.kml | sed -e 's/.*<coordinates>\(.*\)<\/coordinates>*/\1/' | awk '{for (i=1; i<=NF; i++) {split($i,a,",") ; print a[2]}}' | sort | sed -r '/^\s*$/d' |  grep -v coordinates | awk 'NR == 1 { print }END{ print }'` 
 
-longitudes=`awk '/<LinearRing>/{flag=1;next}/<\/LinearRing>/{flag=0}flag' $filename.kml | awk '/<coordinates>/{flag=1;next}/<\/coordinates>/{flag=0}flag' | awk '{for (i=1; i<=NF; i++) {split($i,a,",") ; print a[1]}}' | sort | awk 'NR == 1 { print }END{ print }'`
+longitudes=`awk '/<LinearRing>/{flag=1;next}/<\/LinearRing>/{flag=0}flag' $filename.kml | sed -e 's/.*<coordinates>\(.*\)<\/coordinates>*/\1/' | awk '{for (i=1; i<=NF; i++) {split($i,a,",") ; print a[1]}}' | sort | sed -r '/^\s*$/d' |  grep -v coordinates | awk 'NR == 1 { print }END{ print }'`
+
+#longitudes=`awk '/<LinearRing>/{flag=1;next}/<\/LinearRing>/{flag=0}flag' $filename.kml | awk '/<coordinates>/{flag=1;next}/<\/coordinates>/{flag=0}flag' | awk '{for (i=1; i<=NF; i++) {split($i,a,",") ; print a[1]}}' | sort | awk 'NR == 1 { print }END{ print }'`
 
 
 # Add a buffer of 100m (0.001) for each side, manage negative values

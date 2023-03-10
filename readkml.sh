@@ -25,7 +25,6 @@ fileext=`echo $fileg | awk '{print substr($1,length($1)-2,3)}'`
 # In case of kmz, unzip it
 
 if [[ $fileext == "kmz" ]]; then
-rm doc.kml
 unzip $fileg
 mv doc.kml $filename.kml
 fi

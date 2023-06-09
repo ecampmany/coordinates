@@ -7,3 +7,4 @@
 # macOS system
 ##############
 .DS_Store
+.ipynb_checkpoints
